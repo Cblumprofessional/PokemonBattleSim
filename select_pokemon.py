@@ -2,6 +2,7 @@ import start_menu as sm
 import json
 import random
 import time
+import battle
 
 def clean_name(name):
     return (
@@ -16,6 +17,10 @@ def clean_name(name):
 
 def select_pokemon():
     trainers_pokemon = {}
+    trainer1_pokemon = {}
+    trainer2_pokemon = {}
+
+
 
     with open('./files/pokedex.json', 'r', encoding="utf-8") as file:
         data = json.load(file)
@@ -32,6 +37,7 @@ def select_pokemon():
 
     if mode[-1] == "single":
         trainer = mode
+        mo = mode [-1]
         for item in trainer:
             if isinstance(item, dict):
                 for key, value in item.items():
@@ -91,7 +97,8 @@ def select_pokemon():
                             "accuracy": move_data["accuracy"],
                             "type": move_data["type"],
                             "category": move_data["category"],
-                            "effect": move_data["shortDesc"]
+                            "effect": move_data["shortDesc"],
+                            "priority": move_data["priority"]
                         })
                     else:
                         chosen_pokemon["Moves"].append({
@@ -101,7 +108,8 @@ def select_pokemon():
                             "accuracy": None,
                             "type": None,
                             "category": None,
-                            "effect": "Move data not found"
+                            "effect": "Move data not found",
+                            "priority":None
                         })
             else:
                 print("Pokemon not found in learnset:", pokemonName)
@@ -119,10 +127,13 @@ def select_pokemon():
                     f"Power: {move['power']} | Accuracy: {move['accuracy']}"
                 )
                 print(f"    Effect: {move['effect']}")
+        return trainers_pokemon, mode
 
     print("\n")
     if mode[-1] == "multiplayer":
         trainers = mode
+        mo = mode [-1]
+
         for item in trainers:
             if isinstance(item, dict):
                 for key, value in item.items():
@@ -165,7 +176,8 @@ def select_pokemon():
                 "Name": pokemon["name"]["english"],
                 "Type": pokemon["type"],
                 "Stats": stats_text,
-                "Moves": []
+                "Moves": [],
+                "Flags": []
             }
 
             if pokemonName in movesset:
@@ -185,7 +197,9 @@ def select_pokemon():
                             "accuracy": move_data["accuracy"],
                             "type": move_data["type"],
                             "category": move_data["category"],
-                            "effect": move_data["shortDesc"]
+                            "effect": move_data["shortDesc"],
+                            "priority": move_data["priority"]
+
                         })
                     else:
                         chosen_pokemon["Moves"].append({
@@ -195,14 +209,15 @@ def select_pokemon():
                             "accuracy": None,
                             "type": None,
                             "category": None,
-                            "effect": "Move data not found"
+                            "effect": "Move data not found",
+                            "priority": None
                         })
             else:
                 print("Pokemon not found in learnset:", pokemonName)
 
-            trainers_pokemon[i] = chosen_pokemon
+            trainer1_pokemon[i] = chosen_pokemon
         print(f'{trainer1["Name"]}, "pokemon"')
-        for key, value in trainers_pokemon.items():
+        for key, value in trainer1_pokemon.items():
             print(f"\nSlot {key + 1}: {value['Name']}")
             print(f"Type: {' / '.join(value['Type'])}")
             print(value["Stats"])
@@ -240,7 +255,8 @@ def select_pokemon():
                 "Name": pokemon["name"]["english"],
                 "Type": pokemon["type"],
                 "Stats": stats_text,
-                "Moves": []
+                "Moves": [],
+                "Flags": []
             }
 
             if pokemonName in movesset:
@@ -260,7 +276,9 @@ def select_pokemon():
                             "accuracy": move_data["accuracy"],
                             "type": move_data["type"],
                             "category": move_data["category"],
-                            "effect": move_data["shortDesc"]
+                            "effect": move_data["shortDesc"],
+                            "priority": move_data["priority"]
+
                         })
                     else:
                         chosen_pokemon["Moves"].append({
@@ -270,15 +288,16 @@ def select_pokemon():
                             "accuracy": None,
                             "type": None,
                             "category": None,
-                            "effect": "Move data not found"
+                            "effect": "Move data not found",
+                            "priority": None
                         })
             else:
                 print("Pokemon not found in learnset:", pokemonName)
 
-            trainers_pokemon[i] = chosen_pokemon
+            trainer2_pokemon[i] = chosen_pokemon
 
         print(f'{trainer1["Name"]}, "pokemon"')
-        for key, value in trainers_pokemon.items():
+        for key, value in trainer2_pokemon.items():
             print(f"\nSlot {key + 1}: {value['Name']}")
             print(f"Type: {' / '.join(value['Type'])}")
             print(value["Stats"])
@@ -290,4 +309,7 @@ def select_pokemon():
                 )
                 print(f"    Effect: {move['effect']}")
 
+
     print("\n")
+    
+    battle.battle(trainer1, trainer1_pokemon, trainer2, trainer2_pokemon, mode)
