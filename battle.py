@@ -80,7 +80,9 @@ def move_stats(move):
         "Type": move["type"],
         "Category": move["category"],
         "Effect": move["effect"],
-        "Priority": move["priority"]
+        "Priority": move["priority"],
+        "boosts": move.get("boosts", {}),
+        "target": move.get("target")
     }
 
     return move_stat
@@ -230,12 +232,16 @@ def calculate_damage(attacker, defender, move, critical=False):
 def apply_status(user, target, move):
     boosts = move.get("boosts", {})
 
+    print("\n!!!CHECKING BOOSTS!!!\n")
     if not boosts:
+        print("\n!!!NO BOOSTS!!!\n")
         return
 
+    print("\n!!!BOOSTS FOUND!!!\n")
     if move["target"] == "self":
         affected = user
-    else:
+        
+    if move["target"] == "normal":
         affected = target
 
     th.warning(f"{move['Name']} applies {boosts} to {affected['Name']}")
@@ -249,7 +255,7 @@ def execute_move(user, target, move):
         th.danger(f"{user['Name']} deals {damage} damage to {target['Name']}")
         return update_stats(target, "HP", True, damage)
 
-    if move["Category"] == "Status":
+    if move["Category"] in ("Status"):
         apply_status(user, target, move)
         return get_poke_stats(target["Stats"])
 
@@ -269,7 +275,10 @@ def update_stats(pokemon, stat, damage, number):
 
 
 def battle(trainer1, trainer1_pokemon, trainer2, trainer2_pokemon, mode):
-
+    
+    ##CURRENTLY POKEMON THAT ARE SUBBED IN AFTER ONE DIES COMPLETES THE ACTION OF THE DEAD
+    ##POKEMON. THIS IS DUE TO THE ACTION BEING COMPLETED BEFORE CHECKING FOR A SUB
+    turn = 1
     if mode[-1] == "multiplayer":
         th.header("MULTIPLAYER BATTLE")
         th.info("Battle Starting")
@@ -296,7 +305,7 @@ def battle(trainer1, trainer1_pokemon, trainer2, trainer2_pokemon, mode):
         time.sleep(2)
 
         while p1["HP"] > 0 and p2["HP"] > 0:
-            th.header("NEW TURN")
+            th.header(f"TURN: {turn}")
 
             p1_chosen_action = action(t1CurrentPokemon, trainer1)
             time.sleep(2)
@@ -334,6 +343,7 @@ def battle(trainer1, trainer1_pokemon, trainer2, trainer2_pokemon, mode):
                     th.print_pokemon_sendout(trainer2["Name"], t2CurrentPokemon)
                     time.sleep(2)
 
+                    continue   
                 p1_turn = execute_move(t2CurrentPokemon, t1CurrentPokemon, p2_chosen_action)
                 p1["HP"] = p1_turn["HP"]
                 time.sleep(2)
@@ -358,6 +368,7 @@ def battle(trainer1, trainer1_pokemon, trainer2, trainer2_pokemon, mode):
                     th.header("Replacement")
                     th.print_pokemon_sendout(trainer1["Name"], t1CurrentPokemon)
                     time.sleep(2)
+                    continue
 
                 t2CurrentPokemon["Stats"] = rebuild_stats_string(p2)
                 t1CurrentPokemon["Stats"] = rebuild_stats_string(p1)
@@ -386,6 +397,7 @@ def battle(trainer1, trainer1_pokemon, trainer2, trainer2_pokemon, mode):
                     th.header("Replacement")
                     th.print_pokemon_sendout(trainer1["Name"], t1CurrentPokemon)
                     time.sleep(2)
+                    continue
 
                 p2_turn = execute_move(t1CurrentPokemon, t2CurrentPokemon, p1_chosen_action)
                 p2["HP"] = p2_turn["HP"]
@@ -412,8 +424,11 @@ def battle(trainer1, trainer1_pokemon, trainer2, trainer2_pokemon, mode):
                     th.header("Replacement")
                     th.print_pokemon_sendout(trainer2["Name"], t2CurrentPokemon)
                     time.sleep(2)
+                    continue
 
                 t2CurrentPokemon["Stats"] = rebuild_stats_string(p2)
                 t1CurrentPokemon["Stats"] = rebuild_stats_string(p1)
 
             time.sleep(2)
+            
+            turn +=1

@@ -98,7 +98,8 @@ def select_pokemon():
                             "type": move_data["type"],
                             "category": move_data["category"],
                             "effect": move_data["shortDesc"],
-                            "priority": move_data["priority"]
+                            "priority": move_data["priority"],
+                            "target": move_data["target"]
                         })
                     else:
                         chosen_pokemon["Moves"].append({
@@ -109,7 +110,8 @@ def select_pokemon():
                             "type": None,
                             "category": None,
                             "effect": "Move data not found",
-                            "priority":None
+                            "priority":None,
+                            "target": None
                         })
             else:
                 print("Pokemon not found in learnset:", pokemonName)
@@ -124,7 +126,7 @@ def select_pokemon():
             for move in value["Moves"]:
                 print(
                     f"  - {move['name']} | {move['type']} | {move['category']} | "
-                    f"Power: {move['power']} | Accuracy: {move['accuracy']}"
+                    f"Power: {move['power']} | Accuracy: {move['accuracy']} | Target: {move['target']}" 
                 )
                 print(f"    Effect: {move['effect']}")
         return trainers_pokemon, mode
@@ -198,7 +200,8 @@ def select_pokemon():
                             "type": move_data["type"],
                             "category": move_data["category"],
                             "effect": move_data["shortDesc"],
-                            "priority": move_data["priority"]
+                            "priority": move_data["priority"],
+                            "target": move_data["target"]
 
                         })
                     else:
@@ -210,7 +213,8 @@ def select_pokemon():
                             "type": None,
                             "category": None,
                             "effect": "Move data not found",
-                            "priority": None
+                            "priority": None,
+                            "target": None
                         })
             else:
                 print("Pokemon not found in learnset:", pokemonName)
@@ -225,7 +229,7 @@ def select_pokemon():
             for move in value["Moves"]:
                 print(
                     f"  - {move['name']} | {move['type']} | {move['category']} | "
-                    f"Power: {move['power']} | Accuracy: {move['accuracy']}"
+                    f"Power: {move['power']} | Accuracy: {move['accuracy']} | Target: {move['target']}"
                 )
                 print(f"    Effect: {move['effect']}")
 
@@ -277,7 +281,8 @@ def select_pokemon():
                             "type": move_data["type"],
                             "category": move_data["category"],
                             "effect": move_data["shortDesc"],
-                            "priority": move_data["priority"]
+                            "priority": move_data["priority"],
+                            "target": move_data["target"]
 
                         })
                     else:
@@ -289,7 +294,8 @@ def select_pokemon():
                             "type": None,
                             "category": None,
                             "effect": "Move data not found",
-                            "priority": None
+                            "priority": None,
+                            "target": None
                         })
             else:
                 print("Pokemon not found in learnset:", pokemonName)
@@ -305,7 +311,7 @@ def select_pokemon():
             for move in value["Moves"]:
                 print(
                     f"  - {move['name']} | {move['type']} | {move['category']} | "
-                    f"Power: {move['power']} | Accuracy: {move['accuracy']}"
+                    f"Power: {move['power']} | Accuracy: {move['accuracy']} | Target: {move["target"]}"
                 )
                 print(f"    Effect: {move['effect']}")
 
